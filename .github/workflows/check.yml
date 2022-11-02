@@ -24,7 +24,7 @@ jobs:
         #shell: bash
 
       - name: test
-        if: ${{ "${{ steps.latest.outputs.LATEST_VERSION }}" != "${{ steps.current.outputs.CURRENT_VERSION }}"}}
+        if: ${{ ${{ steps.latest.outputs.LATEST_VERSION }} != ${{ steps.current.outputs.CURRENT_VERSION }} }}
         run: |
           wget "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
           unzip Xray-linux-64.zip
