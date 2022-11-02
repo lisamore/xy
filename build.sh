@@ -5,8 +5,8 @@ if [[ ${latest_version} == ${current_version} ]]
 then
     echo 'there is nothing to do'
 else
-    git config --local user.name 'GitHub Action'
-    git config --local user.email 'action@github.com
+    git config user.name github-actions
+    git config user.email github-actions@github.com
     git clone https://github.com/XTLS/Xray-core.git 
     cd Xray-core && go mod download
     CGO_ENABLED=0 go build -o x -trimpath -ldflags "-s -w -buildid=" ./main
