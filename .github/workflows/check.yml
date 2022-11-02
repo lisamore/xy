@@ -18,7 +18,10 @@ jobs:
           test -f x && current_version=$(./x version | awk 'NR==1 {print $2}')
           echo ${latest_version}
           echo ${current_version}
-          if [[ "${latest_version}" == "${current_version}" ]]; then exit 1; fi
+          if [[ "${latest_version}" == "${current_version}" ]]; then 
+             stopMarker=$(uuidgen)
+             echo "::stop-commands::$stopMarker"; 
+          fi
         shell: bash
 
       - name: test
