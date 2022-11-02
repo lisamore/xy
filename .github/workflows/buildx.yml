@@ -11,13 +11,14 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
-
+        
       - name: Check VER
-        run: | 
-          latest_version=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | grep "tag_name" | cut -d\" -f4 | sed -e "s/^v//" -e "s/-.$//" | cut -d"v" -f 2)
-          test -f x && current_version=$(./x version | cut -d" " -f 1 | cut -d"v" -f 2)
+        run: |  
+          latest_version=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
+          test -f x && current_version=$(./x version | awk 'NR==1 {print $2}')
           if [[ "${latest_version}" == "${current_version}" ]]; then exit 1; fi
-          
+        #shell: bash
+        
       - name: Set variables
         run: |
           echo "GOLANG=$(wget -qO- https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json | grep 'version' | cut -d\" -f4 | head -1)" >> $GITHUB_ENV
