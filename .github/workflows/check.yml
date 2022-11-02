@@ -21,7 +21,6 @@ jobs:
           if [[ "${latest_version}" == "${current_version}" ]]; then exit 1; fi
 
       - name: test
-        if: ${{ cancelled() }}
         run: |
           wget "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
           unzip Xray-linux-64.zip
