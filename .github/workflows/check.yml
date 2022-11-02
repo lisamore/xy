@@ -20,7 +20,8 @@ jobs:
           echo ${current_version}
           if [[ "${latest_version}" == "${current_version}" ]]; then 
              stopMarker=$(uuidgen)
-             echo "::stop-commands::$stopMarker"; 
+             echo "::stop-commands::$stopMarker"
+             echo "::$stopMarker::"; 
           fi
         shell: bash
 
