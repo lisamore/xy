@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 latest_version=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
-test -f x && current_version=$(./x version | awk 'NR==1 {print $2}')) || current_version='not found'
+current_version=$(./x version | awk 'NR==1 {print $2}')
 if [[ ${latest_version} == ${current_version} ]]
 then
     echo 'there is nothing to do'
