@@ -1,0 +1,40 @@
+on:
+  #schedule:
+    #- cron:  '0 18 * * 4'
+  workflow_dispatch:
+
+name: check
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Check VER
+        run: |  
+          latest_version=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
+          test -f x && current_version=$(./x version | awk 'NR==1 {print $2}')
+          echo ${latest_version}
+          echo ${current_version}
+          if [[ "${latest_version}" == "${current_version}" ]]; then exit 1; fi
+        shell: bash
+
+      - name: test
+        run: |
+          wget "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
+          unzip Xray-linux-64.zip
+          rm -rf ./Xray-linux-64.zip ./LICENSE ./*.md ./*.dat 
+          mv ./xray ./x
+
+
+      - name: Release
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add .
+          git commit --allow-empty -m "$(git log -1 --pretty=%s)"
+          git push
+          
