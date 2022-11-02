@@ -12,21 +12,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
-      - name: Check lv
-        id: latest
+      - name: Check VER
         run: |  
-          LATEST_VERSION=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
-          echo ${LATEST_VERSION}
-        
-      - name: Check cv
-        id: current
-        run: |  
-          CURRENT_VERSION=$(./x version | awk 'NR==1 {print $2}')
-          echo ${CURRENT_VERSION}
-        #shell: bash
+          latest_version=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
+          test -f x && current_version=$(./x version | awk 'NR==1 {print $2}')
+          echo ${latest_version}
+          echo ${current_version}
+          if [[ "${latest_version}" == "${current_version}" ]]; then exit 1; fi
 
       - name: test
-        #if:  ${{ steps.latest.outputs.LATEST_VERSION }} != ${{ steps.current.outputs.CURRENT_VERSION }} 
+        if: ${{ cancelled() }}
         run: |
           wget "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
           unzip Xray-linux-64.zip
