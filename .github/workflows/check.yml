@@ -15,18 +15,18 @@ jobs:
       - name: Check lv
         id: latest
         run: |  
-          echo "LATEST_VERSION=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')" >> $GITHUB_OUTPUT
+          LATEST_VERSION=$(curl -s "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | sed 'y/,/\n/' | grep 'tag_name' | awk -F '"' '{print substr($4,2)}')
           echo ${LATEST_VERSION}
         
       - name: Check cv
         id: current
         run: |  
-          echo "CURRENT_VERSION=$(./x version | awk 'NR==1 {print $2}')" >> $GITHUB_OUTPUT
+          CURRENT_VERSION=$(./x version | awk 'NR==1 {print $2}')
           echo ${CURRENT_VERSION}
         #shell: bash
 
       - name: test
-        if:  ${{ steps.latest.outputs.LATEST_VERSION }} != ${{ steps.current.outputs.CURRENT_VERSION }} 
+        #if:  ${{ steps.latest.outputs.LATEST_VERSION }} != ${{ steps.current.outputs.CURRENT_VERSION }} 
         run: |
           wget "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip"
           unzip Xray-linux-64.zip
