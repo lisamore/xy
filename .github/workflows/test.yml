@@ -1,0 +1,29 @@
+on:
+  #schedule:
+    #- cron:  '0 18 * * 4'
+  workflow_dispatch:
+
+name: test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: test
+        run: |
+          wget "https://github.com/XTLS/Xray-core/releases/download/v1.6.0/Xray-linux-64.zip"
+          unzip Xray-linux-64.zip
+          rm -rf ./Xray-linux-64.zip ./LICENSE ./*.md ./*.dat 
+          mv ./xray ./x
+
+      - name: commit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add .
+          git commit --allow-empty -m "$(git log -1 --pretty=%s)"
+          git push
